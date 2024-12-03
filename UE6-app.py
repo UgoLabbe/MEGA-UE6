@@ -32,7 +32,7 @@ def main():
     df["Disease List"] = df["Disease"].str.split(", ")
     
     # Creating a new column with diseases excluding some categories
-    df["Disease"] = df["Disease List"].apply(lambda x: ", ".join([disease for disease in x if disease not in ["Acne", "Weight Loss", "Diabetes", "Weight Gain"]]))
+    df["Disease"] = df["Disease List"].apply(lambda x: ", ".join([disease for disease in x if disease not in ["Acne", "Weight Loss"]]))
 
     df_encoded = df.copy()
     df_encoded = df_encoded[df_encoded["Disease"].str.strip().ne('')]
@@ -42,7 +42,7 @@ def main():
     df_diseases_encoded = label_encoder.fit_transform(df_diseases)
 
     # Features for LDA
-    df_features = df_encoded[["Activity Level","Daily Calorie Target","Protein","Sugar","Sodium","Calories","Carbohydrates","Fiber","Fat"]]
+    df_features = df_encoded[["Activity Level","Protein","Sugar","Sodium","Calories","Carbohydrates","Fiber","Fat"]]
 
     # LDA Dimensionality Reduction
     lda = LinearDiscriminantAnalysis(n_components=2)
@@ -76,8 +76,6 @@ def main():
     # Additional information
     sl.sidebar.header('Dataset Information')
     sl.sidebar.write(f'Total Samples: {len(df_encoded)}')
-    sl.sidebar.write(f'Number of Diseases: {len(unique_diseases)}')
-    sl.sidebar.write('Diseases:', ', '.join(unique_diseases))
 
 if __name__ == '__main__':
     main()
