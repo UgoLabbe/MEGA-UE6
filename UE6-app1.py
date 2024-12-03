@@ -29,7 +29,7 @@ def disease_classification_page(df):
     # numeric_columns = df.select_dtypes(include=["float64", "int64"]).columns
     # df[numeric_columns] = df[numeric_columns].fillna(df[numeric_columns].mean())
     # df[numeric_columns] = scaler.fit_transform(df[numeric_columns])
-    columns_used_lda = ["Activity Level", "Protein", "Sugar", "Sodium", "Calories", "Carbohydrates", "Fiber", "Fat"]
+    columns_used_lda = ["Activity Level", "Protein", "Sugar", "Sodium", "Carbohydrates", "Fiber", "Fat"]
     numerical_columns_used_lda = df[columns_used_lda].select_dtypes(include=["float64", "int64"]).columns
     df[numerical_columns_used_lda] = scaler.fit_transform(df[numerical_columns_used_lda])
 
@@ -62,12 +62,11 @@ def disease_classification_page(df):
     X_r = lda.fit_transform(df_features, df_diseases_encoded)
     
     # Interactive user inputs
-    sl.sidebar.header("Enter your details:")
+    sl.sidebar.header("Enter your patients details:")
     activity_level = sl.sidebar.selectbox("Activity Level", ['Sedentary', 'Lightly Active', 'Moderately Active', 'Very Active', 'Extremely Active'])
     protein = sl.sidebar.number_input("Protein (g)", min_value=0, value=140)
     sugar = sl.sidebar.number_input("Sugar (g)", min_value=0, value=126)
     sodium = sl.sidebar.number_input("Sodium (g)", min_value=0, value=28)
-    calories = sl.sidebar.number_input("Calories", min_value=0, value=2196)
     carbohydrates = sl.sidebar.number_input("Carbohydrates (g)", min_value=0, value=262)
     fiber = sl.sidebar.number_input("Fiber (g)", min_value=0, value=30)
     fat = sl.sidebar.number_input("Fat (g)", min_value=0, value=70)
@@ -85,7 +84,6 @@ def disease_classification_page(df):
         "Protein": [protein],
         "Sugar": [sugar],
         "Sodium": [sodium],
-        "Calories": [calories],
         "Carbohydrates": [carbohydrates],
         "Fiber": [fiber],
         "Fat": [fat]
@@ -104,34 +102,26 @@ def disease_classification_page(df):
     user_lda_position = lda.transform(user_input_scaled)
 
     # Visualization options
-    vis_option = sl.sidebar.selectbox('Visualization Type', ['Scatter Plot'])
     colors = ["red", "blue", "m", "green"]
     unique_diseases = df_diseases.unique()
     
     # Plotting
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(12, 8))
 
-    if vis_option == 'Scatter Plot':
-        for disease, color in zip(unique_diseases, colors):
-            mask = df_diseases == disease
-            plt.scatter(X_r[mask, 0], X_r[mask, 1], c=[color], label=disease, alpha=0.9, s=35)
-        
-        # Plot the user's position
-        plt.scatter(user_lda_position[0, 0], user_lda_position[0, 1], c='black', marker='x', s=100, label="Your Position")
+    for disease, color in zip(unique_diseases, colors):
+        mask = df_diseases == disease
+        plt.scatter(X_r[mask, 0], X_r[mask, 1], c=[color], label=disease, alpha=0.9, s=35)
+    
+    # Plot the user's position
+    plt.scatter(user_lda_position[0, 0], user_lda_position[0, 1], c='black', marker='x', s=100, label="Patient")
 
-        plt.xlabel('LDA Component 1')
-        plt.ylabel('LDA Component 2')
-        plt.title('LDA Visualization of Diseases')
-        plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+    plt.xlabel('LDA Component 1')
+    plt.ylabel('LDA Component 2')
+    plt.title('LDA Visualization of Diseases')
+    plt.legend(loc='best')
     
     plt.tight_layout()
     sl.pyplot(plt)
-    
-    # Display information in sidebar
-    sl.sidebar.header('Dataset Information')
-    sl.sidebar.write(f'Total Samples: {len(df_encoded)}')
-
-
 
 def data_description_page(df):
     sl.title("Data Description")

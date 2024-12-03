@@ -42,7 +42,7 @@ def main():
     df_diseases_encoded = label_encoder.fit_transform(df_diseases)
 
     # Features for LDA
-    df_features = df_encoded[["Activity Level","Protein","Sugar","Sodium","Calories","Carbohydrates","Fiber","Fat"]]
+    df_features = df_encoded[["Activity Level","Protein","Sugar","Sodium","Carbohydrates","Fiber","Fat"]]
 
     # LDA Dimensionality Reduction
     lda = LinearDiscriminantAnalysis(n_components=2)
