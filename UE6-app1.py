@@ -12,7 +12,10 @@ def main():
     df = pd.read_csv("Food_and_Nutrition__.csv")
     
     # Sidebar Navigation
+    sl.sidebar.markdown("Group 3 : Lune TEPLITCHI, Ugo LABBÉ, Gabin GARROT")
+
     sl.sidebar.title("Navigation")
+
     page = sl.sidebar.radio("Go to", ["Disease Classification", "Data Description"])
     
     if page == "Disease Classification":
