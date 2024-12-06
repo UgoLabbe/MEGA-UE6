@@ -156,10 +156,11 @@ def data_description_page(df):
     
     # Activity level bar chart
     sl.write("### Activity Level Distribution")
-    activity_counts = df['Activity Level'].value_counts()
+    activity_counts = df['Activity Level'].value_counts().reindex(['Sedentary','Lightly Active','Moderately Active','Very Active', 'Extremely Active'])
     fig2, ax2 = plt.subplots()
     sns.barplot(x=activity_counts.index, y=activity_counts.values, palette='viridis', ax=ax2)
     ax2.set_xlabel("Activity Level")
+    ax2.set_xticklabels(ax2.get_xticklabels(), rotation=45, fontsize=10)
     ax2.set_ylabel("Count")
     ax2.set_title("Activity Level Distribution")
     sl.pyplot(fig2)
@@ -197,7 +198,7 @@ def data_description_page(df):
     
     # Correlation heatmap
     sl.write("### Correlation Heatmap")
-    corr_matrix = df.select_dtypes(include=["float64", "int64"]).corr()
+    corr_matrix = df[["Protein","Sugar","Sodium","Carbohydrates","Fiber","Fat"]].corr()
     fig4, ax4 = plt.subplots(figsize=(10, 8))
     sns.heatmap(corr_matrix, annot=True, fmt=".2f", cmap="coolwarm", ax=ax4)
     ax4.set_title("Correlation Between Numerical Features")
